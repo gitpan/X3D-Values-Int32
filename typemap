@@ -1,0 +1,24 @@
+TYPEMAP
+SELF						T_SELF
+X3D::Values::Int32	T_X3DINT32
+
+INPUT
+T_X3DINT32
+	if (sv_derived_from($arg, \"${Package}\")) {
+		$var = ($type)SvIV((SV*)SvRV($arg));
+	}
+	else
+		Perl_croak(aTHX_ \"this is not of type ${Package}\");
+
+T_SELF
+	if (sv_derived_from($arg, \"${Package}\")) {
+		$var = ($type)SvRV($arg);
+	}
+	else
+		Perl_croak(aTHX_ \"this is not of type ${Package}\");
+
+OUTPUT
+T_X3DINT32
+	sv_setref_iv($arg, \"$ntype\", (IV)$var);
+
+T_SELF
