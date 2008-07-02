@@ -22,10 +22,10 @@ MAX_INT32 = 1<<31-1;
 ################################################################################
 
 X3D::Values::Int32
-X3DInt32_new(self, value=0)
-	I32	value   
+X3DInt32_new(self, value="0")
+	char*	value   
 CODE:
-	RETVAL = value;
+	RETVAL = (I32)Atol(value);
 OUTPUT:
 	RETVAL
 
@@ -42,9 +42,9 @@ OUTPUT:
 void
 X3DInt32_setValue(self, value)
 	SELF	self
-	I32	value
+	char*	value
 CODE:
-	sv_setiv(self, value);
+	sv_setiv(self, (I32)Atol(value));
 	
 I32
 X3DInt32_getValue(this, ...)
