@@ -31,7 +31,7 @@ our @EXPORT = qw(
   Int32
 );
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 require XSLoader;
 XSLoader::load( 'X3D::Values::Int32', $VERSION );
@@ -50,7 +50,7 @@ use overload (
    '==' => '_neq',
    '!=' => '_nne',
 
-   #'<=>' => sub { $_[2] ? $_[1] <=> $_[0]->getValue : $_[0]->getValue <=> $_[1] },
+   '<=>' => sub { $_[2] ? $_[1] <=> $_[0]->getValue : $_[0]->getValue <=> $_[1] },
 
    #'>' => '_ngt',
    #'<' => '_nlt',

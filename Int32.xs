@@ -100,7 +100,7 @@ OUTPUT:
 ################################################################################
 
 # ~
-IV
+X3D::Values::Int32
 X3DInt32_complement(this, ...)
 	X3D::Values::Int32	this
 CODE:
@@ -232,17 +232,17 @@ OUTPUT:
 # ++
 SELF
 X3DInt32__inc(self, value, swap=FALSE)
-	SELF	self
+  SELF  self
 CODE:
-	sv_setiv(self, (I32)(SvIV(self) + 1));
+  sv_setiv(self, (I32)(SvIV(self) + 1));
 OUTPUT:
 SETMAGIC: DISABLE
-	self
+  self
 
 # --
 SELF
 X3DInt32__dec(self, value, swap=FALSE)
-	SELF	self
+	SELF  self
 CODE:
 	sv_setiv(self, (I32)(SvIV(self) - 1));
 OUTPUT:
@@ -254,19 +254,19 @@ SETMAGIC: DISABLE
 # +=
 SELF
 X3DInt32__add(self, value, swap=FALSE)
-	SELF	self
-	IV		value
+	SELF  self
+	IV 	value
 CODE:
 	sv_setiv(self, (I32)(SvIV(self) + value));
 OUTPUT:
 SETMAGIC: DISABLE
-	self
+  self
 
 # -=
 SELF
 X3DInt32__subtract(self, value, swap=FALSE)
-	SELF	self
-	IV		value
+	SELF  self
+	IV 	value
 CODE:
 	sv_setiv(self, (I32)(SvIV(self) - value));
 OUTPUT:
