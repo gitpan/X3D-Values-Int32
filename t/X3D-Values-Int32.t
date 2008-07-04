@@ -139,7 +139,47 @@ ok !!$v;
 ok $v == 1234;
 ok !( $v != 1234 );
 
+is $v != $c, '';
+is $c != $v, '';
+is $v == $c, 1;
+is $c == $v, 1;
+is $v > $c, '';
+is $c > $v, '';
+is $v < $c, '';
+is $c < $v, '';
+is $v <= $c, 1;
+is $c <= $v, 1;
+is $v >= $c, 1;
+is $c >= $v, 1;
+is $v <=> $c, 0;
+is $c <=> $v, 0;
+is $v eq $c, 1;
+is $c eq $v, 1;
+is $v ne $c, '';
+is $c ne $v, '';
+is $v cmp $c, 0;
+is $c cmp $v, 0;
 is $v->setValue(2147483649), undef;
+is $v != $c, 1;
+is $c != $v, 1;
+is $v == $c, '';
+is $c == $v, '';
+is $v > $c, '';
+is $c > $v, 1;
+is $v < $c, 1;
+is $c < $v, '';
+is $v <= $c, 1;
+is $c <= $v, '';
+is $v >= $c, '';
+is $c >= $v, 1;
+is $v <=> $c, -1;
+is $c <=> $v, 1;
+is $v eq $c, '';
+is $c eq $v, '';
+is $v ne $c, 1;
+is $c ne $v, 1;
+is $v cmp $c, -1;
+is $c cmp $v, 1;
 is $c, 1234;
 is $v->getValue, -2147483647;
 is $v = new X3DInt32($v), -2147483647;
@@ -224,6 +264,9 @@ is atan2( new X3DInt32($p), new X3DInt32($p) ), atan2( $p, $p );
 is atan2( $p, new X3DInt32($p) ), atan2( $p, $p );
 is atan2( new X3DInt32($p), $p ), atan2( $p, $p );
 
+is $v = new X3DInt32(1), 1;
+is $v += -2147483649, -2147483648;
+
 is $v = new X3DInt32(), 0;
 is $c = $v->getClone, 0;
 is $v += 1, 1;
@@ -276,15 +319,16 @@ is $v--, 3;
 is $v--, 2;
 
 is $v = new X3DInt32(2147483646), 2147483646;
-is $v++,  2147483646;
-is $v++,  2147483647;
+is $v++, 2147483646;
+is $v++, 2147483647;
 is $v++, -2147483648;
 is $v++, -2147483647;
 is $v--, -2147483646;
 is $v--, -2147483647;
 is $v--, -2147483648;
-is $v--,  2147483647;
+is $v--, 2147483647;
 
+## Please see file perltidy.ERR
 is $v = new X3DInt32(4), 4;
 is $v *= 2.5, 10;
 is $v /= 2.5, 4;
@@ -314,7 +358,7 @@ $e = eval { 100 % new X3DInt32(0) };
 ok $@;
 
 is $c = $v = new X3DInt32(2147483646), 2147483646;
-is $v += 1.4,  2147483647;
+is $v += 1.4, 2147483647;
 is $v += 1.4, -2147483648;
 is $v += 1.4, -2147483647;
 is $v += 1.4, -2147483646;
@@ -323,8 +367,8 @@ is $v->getValue, -2147483646;
 is $c, 2147483646;
 
 ok $c eq "2147483646";
-ok !($c eq "214748364");
-ok !($c ne "2147483646");
+ok !( $c eq "214748364" );
+ok !( $c ne "2147483646" );
 ok $c ne "214748364";
 
 is ~$c, -2147483647;
@@ -340,6 +384,13 @@ is ~~ $c, 2147483646;
 is $c, -2147483648;
 is $c - 2.4, -2147483650.4;
 
+$v = new X3DInt32(1);
+is $v, 1;
+is ~$v, -2;
+is $v = ~$v, -2;    #-2
+is ~$v, 1;
+is ~~ $v, ~1;
+
 $v = new X3DInt32(0b10110);
 is $v & 0b10011, 0b10010;
 is ~$v & 0b11111, 0b01001;
@@ -347,7 +398,7 @@ is $v | 0b11111, 0b11111;
 is $v | 0b11000, 0b11110;
 is $v ^ 0b11111, 0b01001;
 is $v ^ 0b11000, 0b01110;
-is ~($v ^ 0b11000) & 0b11111, 0b10001;
+is ~( $v ^ 0b11000 ) & 0b11111, 0b10001;
 
 $v = new X3DInt32(0b10);
 is $v << 2, 0b01000;
@@ -373,9 +424,48 @@ is( ( -( -$v ) ), -1 );
 is( -( -( -$v ) ), 1 );
 is( ref -$v, '' );
 
-use Benchmark ':hireswallclock';
+$v = new X3DInt32(3);
+is $v**3, 27;
+is 2**$v, 8;
+is $v**= 3, 27;
+isa_ok $v, 'X3D::Values::Int32';
 
-my $b = new X3DInt32(1);
+is $v . '...', '27...';
+is '...' . $v, '...27';
+is $v x 3, '272727';
+
+$v = new X3DInt32(3);
+is 12 x $v, '121212';
+
+$v = new X3DInt32(1);
+is $v << 1, 2;
+is $v << 2, 4;
+is $v << 3, 8;
+is $v << 4, 16;
+
+is 1 << new X3DInt32(1), 2;
+is 1 << new X3DInt32(2), 4;
+is 1 << new X3DInt32(3), 8;
+is 1 << new X3DInt32(4), 16;
+
+$v = new X3DInt32(8);
+is $v >> 1, 4;
+is $v >> 2, 2;
+is $v >> 3, 1;
+
+is 8 >> new X3DInt32(1), 4;
+is 8 >> new X3DInt32(2), 2;
+is 8 >> new X3DInt32(3), 1;
+
+is X3DInt32::MAX_INT32, 2147483647;
+is X3DInt32::MIN_INT32, -2147483648;
+
+is X3DInt32::MAX_INT32, new X3DInt32((1<<31)-1);
+is X3DInt32::MIN_INT32, new X3DInt32(1<<31);
+
+#use Benchmark ':hireswallclock';
+
+#my $b = new X3DInt32(1);
 
 #timethis( -32, sub { $b = new X3DInt32() } );	#  421897.25/s
 #timethis( -32, sub { $b = new X3DInt32(1) } );	# 1238142.90/s

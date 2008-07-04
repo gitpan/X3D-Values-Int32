@@ -1,3 +1,4 @@
+.build
 Changes
 Int32.xs
 lib/X3D/Values/Int32.pm

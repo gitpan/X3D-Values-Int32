@@ -4,33 +4,48 @@
 
 #include "ppport.h"
 
-static I32 MIN_INT32;
-static I32 MAX_INT32;
-
 typedef SV* SELF;
 typedef I32 X3D__Values__Int32;
+
+#define MIN_INT32 0x80000000
+#define MAX_INT32 0x7fffffff
 
 
 MODULE = X3D::Values::Int32		PACKAGE = X3D::Values::Int32		PREFIX = X3DInt32_
 PROTOTYPES: DISABLE
 
-BOOT:
-MIN_INT32 = 1<<31;
-MAX_INT32 = 1<<31-1;
-
-
 ################################################################################
 
-X3D::Values::Int32
-X3DInt32_new(self, value="0")
-	char*	value   
+# MIN_INT32
+I32
+X3DInt32_MIN_INT32()
 CODE:
-	RETVAL = (I32)Atol(value);
+	RETVAL = MIN_INT32;
+OUTPUT:
+	RETVAL
+
+# MAX_INT32
+I32
+X3DInt32_MAX_INT32()
+CODE:
+	RETVAL = MAX_INT32;
 OUTPUT:
 	RETVAL
 
 ################################################################################
 
+# new
+X3D::Values::Int32
+X3DInt32_new(self, value="0")
+	char*	value   
+CODE:
+	RETVAL = atoll(value);
+OUTPUT:
+	RETVAL
+
+################################################################################
+
+# getClone
 X3D::Values::Int32
 X3DInt32_getClone(this, ...)
 	X3D::Values::Int32	this
@@ -39,13 +54,15 @@ CODE:
 OUTPUT:
 	RETVAL
 
+# setValue
 void
 X3DInt32_setValue(self, value)
 	SELF	self
 	char*	value
 CODE:
-	sv_setiv(self, (I32)Atol(value));
+	sv_setiv(self, atoll(value));
 	
+# getValue
 I32
 X3DInt32_getValue(this, ...)
 	X3D::Values::Int32	this
@@ -56,6 +73,7 @@ OUTPUT:
 
 ################################################################################
 
+# bool
 bool
 X3DInt32__bool(this, ...)
 	X3D::Values::Int32	this
@@ -79,7 +97,7 @@ OUTPUT:
 
 # ==
 bool
-X3DInt32__neq(this, value, swap)
+X3DInt32__neq(this, value, swap=FALSE)
 	X3D::Values::Int32	this
 	NV							value
 CODE:
@@ -89,7 +107,7 @@ OUTPUT:
 
 # !=
 bool
-X3DInt32__nne(this, value, swap)
+X3DInt32__nne(this, value, swap=FALSE)
 	X3D::Values::Int32	this
 	NV							value
 CODE:
@@ -97,10 +115,54 @@ CODE:
 OUTPUT:
 	RETVAL
 
+# <=>
+I32
+X3DInt32__ncmp(this, value, swap=FALSE)
+	X3D::Values::Int32	this
+	NV							value
+	bool						swap
+CODE:
+	RETVAL = swap
+		? (value < this ? -1 : value > this ? 1 : 0)
+		: (this < value ? -1 : this > value ? 1 : 0);
+OUTPUT:
+	RETVAL
+
+# eq
+bool
+X3DInt32__eq(this, value, swap=FALSE)
+	SV*	this
+	SV*	value
+CODE:
+	RETVAL = sv_eq(this, value);
+OUTPUT:
+	RETVAL
+
+# ne
+bool
+X3DInt32__ne(this, value, swap=FALSE)
+	SV*	this
+	SV*	value
+CODE:
+	RETVAL = !sv_eq(this, value);
+OUTPUT:
+	RETVAL
+
+# cmp
+I32
+X3DInt32__cmp(this, value, swap=FALSE)
+	SV*	this
+	SV*	value
+	bool	swap
+CODE:
+	RETVAL = swap ? sv_cmp(value, this) : sv_cmp(this, value);
+OUTPUT:
+	RETVAL
+
 ################################################################################
 
 # ~
-X3D::Values::Int32
+NV
 X3DInt32_complement(this, ...)
 	X3D::Values::Int32	this
 CODE:
@@ -202,8 +264,9 @@ NV
 X3DInt32_sleft(this, value, swap=FALSE)
 	X3D::Values::Int32	this
 	IV							value
+	bool						swap
 CODE:
-	RETVAL = this << value;
+	RETVAL = swap ? value << this : this << value;
 OUTPUT:
 	RETVAL
 
@@ -212,8 +275,9 @@ NV
 X3DInt32_sright(this, value, swap=FALSE)
 	X3D::Values::Int32	this
 	IV							value
+	bool						swap
 CODE:
-	RETVAL = this >> value;
+	RETVAL = swap ? value >> this : this >> value;
 OUTPUT:
 	RETVAL
 
@@ -234,7 +298,7 @@ SELF
 X3DInt32__inc(self, value, swap=FALSE)
   SELF  self
 CODE:
-  sv_setiv(self, (I32)(SvIV(self) + 1));
+  sv_inc(self);
 OUTPUT:
 SETMAGIC: DISABLE
   self
@@ -244,7 +308,7 @@ SELF
 X3DInt32__dec(self, value, swap=FALSE)
 	SELF  self
 CODE:
-	sv_setiv(self, (I32)(SvIV(self) - 1));
+	sv_dec(self);
 OUTPUT:
 SETMAGIC: DISABLE
 	self
@@ -306,6 +370,17 @@ CODE:
 	if (value == 0)
 		croak("Illegal modulus zero");
 	sv_setiv(self, (I32)(SvIV(self) % value));
+OUTPUT:
+SETMAGIC: DISABLE
+	self
+
+# **=
+SELF
+X3DInt32__pow(self, value, swap=FALSE)
+	SELF	self
+	IV		value
+CODE:
+	sv_setiv(self, (I32)pow(SvIV(self), value));
 OUTPUT:
 SETMAGIC: DISABLE
 	self
@@ -462,3 +537,12 @@ CODE:
 	RETVAL = sqrt(this);
 OUTPUT:
 	RETVAL
+
+#IV
+#DESTROY(...)
+#CODE:
+#  warn("X3DInt32::DESTROY");
+#  RETVAL = 0;
+#OUTPUT:
+#  RETVAL
+

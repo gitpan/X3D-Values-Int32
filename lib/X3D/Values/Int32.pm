@@ -20,18 +20,15 @@ our @ISA = qw(Exporter);
 our %EXPORT_TAGS = (
    'all' => [
       qw(
-
+        MIN_INT32
+        MAX_INT32
         )
    ]
 );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our @EXPORT = qw(
-  Int32
-);
-
-our $VERSION = '0.003';
+our $VERSION = '0.004';
 
 require XSLoader;
 XSLoader::load( 'X3D::Values::Int32', $VERSION );
@@ -47,19 +44,18 @@ use overload (
 
    '!' => '_not',
 
-   '==' => '_neq',
-   '!=' => '_nne',
-
-   '<=>' => sub { $_[2] ? $_[1] <=> $_[0]->getValue : $_[0]->getValue <=> $_[1] },
+   '=='  => '_neq',
+   '!='  => '_nne',
+   '<=>' => '_ncmp',
 
    #'>' => '_ngt',
    #'<' => '_nlt',
    #'>=' => '_nge',
    #'<=' => '_nle',
 
-   'eq' => sub { $_[0]->toString eq "$_[1]" },
-   'ne' => sub { $_[0]->toString ne "$_[1]" },
-   'cmp' => sub { $_[2] ? "$_[1]" cmp $_[0]->toString : $_[0]->toString cmp "$_[1]" },
+   'eq'  => '_eq',
+   'ne'  => '_ne',
+   'cmp' => '_cmp',
 
    #'gt' => '_gt',
    #'lt' => '_lt',
@@ -88,9 +84,13 @@ use overload (
    '+=' => '_add',
    '-=' => '_subtract',
 
-   '*=' => '_multiply',
-   '/=' => '_divide',
-   '%=' => '_modulo',
+   '*='  => '_multiply',
+   '/='  => '_divide',
+   '%='  => '_modulo',
+   '**=' => '_pow',
+
+   #'.='  => '_dot',
+   #'x='  => '_x',
 
    '+' => 'add',
    '-' => 'subtract',
@@ -137,41 +137,54 @@ __END__
 
 =head1 NAME
 
-X3D::Values::Int32 - Perl extension for blah blah blah
+X3D::Values::Int32 - Storage type for 32 bit signed integers
+
+=head1 ALIAS
+
+X3DInt32
 
 =head1 SYNOPSIS
 
   use X3D::Values::Int32;
-  blah blah blah
+  my $int32 = new X3D::Values::Int32(1);
+  $int32++;
+  my $half = 1 / $int32; # 0.5
 
 =head1 DESCRIPTION
 
-Stub documentation for X3D::Values::Int32, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
+This module adds support for 32 bit signed integers.
 
-Blah blah blah.
+=head1 CONSTANTS
 
-=head2 EXPORT
+=head2 MIN_INT32
+
+	my $min_int32 = X3DInt32::MIN_INT32;
+
+=head2 MAX_INT32
+
+	my $max_int32 = X3DInt32::MAX_INT32;
+
+=head1 FUNCTIONS
+
+=head2 new(value)
+
+	my $int32 = new X3D::Values::Int32(1234);
+
+=head1 EXPORT
 
 None by default.
 
+Exports I<MIN_INT32> and I<MAX_INT32>, export tag I<-all>
 
+	use X3D::Values::Int32 -all;
+	my $min_int32 = MIN_INT32;
+	my $max_int32 = MAX_INT32;
 
 =head1 SEE ALSO
 
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
-
-If you have a mailing list set up for your module, mention it here.
-
-If you have a web site set up for your module, mention it here.
-
 =head1 AUTHOR
 
-Holger Seelig, E<lt>hooo@cpan.org<gt>
+Holger Seelig, I<hooo(at)cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
