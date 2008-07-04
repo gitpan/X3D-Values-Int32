@@ -215,6 +215,8 @@ ok $v == -1;
 ok !( $v == -1.123 );
 ok $v != -1.123;
 
+is new X3DInt32(-1.123), -1;
+
 is $v = new X3DInt32(-1.0), -1;
 ok $v == -1;
 
@@ -462,6 +464,8 @@ is X3DInt32::MIN_INT32, -2147483648;
 
 is X3DInt32::MAX_INT32, new X3DInt32((1<<31)-1);
 is X3DInt32::MIN_INT32, new X3DInt32(1<<31);
+
+is $v = new X3DInt32(2147483648), '-2147483648';
 
 #use Benchmark ':hireswallclock';
 

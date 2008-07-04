@@ -1,5 +1,8 @@
 .build
 Changes
+Int32.bs
+Int32.c
+Int32.o
 Int32.xs
 lib/X3D/Values/Int32.pm
 Makefile.PL

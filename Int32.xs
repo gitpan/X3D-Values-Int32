@@ -7,9 +7,25 @@
 typedef SV* SELF;
 typedef I32 X3D__Values__Int32;
 
-#define MIN_INT32 0x80000000
-#define MAX_INT32 0x7fffffff
+#define MIN_INT32 ((I32)0x80000000)
+#define MAX_INT32 ((I32)0x7fffffff)
 
+/*warn("integer overflow in expression");*/
+
+I32 atoi32(const char* s) {
+	I32 v=0;
+	int sign=1;
+	while ( *s == ' ' || (unsigned int)(*s - 9) < 5u) ++s;
+	switch (*s) {
+		case '-': sign = -1;
+		case '+': ++s;
+	}
+	while ((unsigned int) (*s - '0') < 10u) {
+		v = v*10 + *s-'0';
+		++s;
+	}
+	return sign == -1 ? -v :  v;
+}
 
 MODULE = X3D::Values::Int32		PACKAGE = X3D::Values::Int32		PREFIX = X3DInt32_
 PROTOTYPES: DISABLE
@@ -39,7 +55,7 @@ X3D::Values::Int32
 X3DInt32_new(self, value="0")
 	char*	value   
 CODE:
-	RETVAL = atoll(value);
+	RETVAL = atoi32(value);
 OUTPUT:
 	RETVAL
 
@@ -60,7 +76,7 @@ X3DInt32_setValue(self, value)
 	SELF	self
 	char*	value
 CODE:
-	sv_setiv(self, atoll(value));
+	sv_setiv(self, atoi32(value));
 	
 # getValue
 I32
@@ -319,9 +335,9 @@ SETMAGIC: DISABLE
 SELF
 X3DInt32__add(self, value, swap=FALSE)
 	SELF  self
-	IV 	value
+	char*	value   
 CODE:
-	sv_setiv(self, (I32)(SvIV(self) + value));
+	sv_setiv(self, (I32)(SvIV(self) + atoi32(value)));
 OUTPUT:
 SETMAGIC: DISABLE
   self
@@ -330,9 +346,9 @@ SETMAGIC: DISABLE
 SELF
 X3DInt32__subtract(self, value, swap=FALSE)
 	SELF  self
-	IV 	value
+	char*	value   
 CODE:
-	sv_setiv(self, (I32)(SvIV(self) - value));
+	sv_setiv(self, (I32)(SvIV(self) - atoi32(value)));
 OUTPUT:
 SETMAGIC: DISABLE
 	self
