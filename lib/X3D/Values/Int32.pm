@@ -28,7 +28,7 @@ our %EXPORT_TAGS = (
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our $VERSION = '0.004';
+our $VERSION = '0.005';
 
 require XSLoader;
 XSLoader::load( 'X3D::Values::Int32', $VERSION );
@@ -181,6 +181,10 @@ Exports I<MIN_INT32> and I<MAX_INT32>, export tag I<-all>
 	my $max_int32 = MAX_INT32;
 
 =head1 SEE ALSO
+
+=head1 BUGS
+
+=item * needed at least a 32 bit architecture
 
 =head1 AUTHOR
 

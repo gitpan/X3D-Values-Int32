@@ -314,7 +314,7 @@ SELF
 X3DInt32__inc(self, value, swap=FALSE)
   SELF  self
 CODE:
-  sv_inc(self);
+	sv_setiv(self, (I32)(SvIV(self) + 1));
 OUTPUT:
 SETMAGIC: DISABLE
   self
@@ -324,7 +324,7 @@ SELF
 X3DInt32__dec(self, value, swap=FALSE)
 	SELF  self
 CODE:
-	sv_dec(self);
+	sv_setiv(self, (I32)(SvIV(self) - 1));
 OUTPUT:
 SETMAGIC: DISABLE
 	self

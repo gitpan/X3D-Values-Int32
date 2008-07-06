@@ -268,6 +268,19 @@ is atan2( new X3DInt32($p), $p ), atan2( $p, $p );
 
 is $v = new X3DInt32(1), 1;
 is $v += -2147483649, -2147483648;
+is $v -= -2147483649, 1;
+
+is $v = new X3DInt32(2), 2;
+is $v *= 2147483647, -2147483648;
+
+is $v = new X3DInt32(2), 2;
+is $v **= 31, -2147483648;
+
+is $v = new X3DInt32(2), 2;
+is $v **= 32, -2147483648;
+
+is $v = new X3DInt32(2), 2;
+is $v **= 33, -2147483648;
 
 is $v = new X3DInt32(), 0;
 is $c = $v->getClone, 0;
@@ -329,8 +342,8 @@ is $v--, -2147483646;
 is $v--, -2147483647;
 is $v--, -2147483648;
 is $v--, 2147483647;
+is $v--, 2147483646;
 
-## Please see file perltidy.ERR
 is $v = new X3DInt32(4), 4;
 is $v *= 2.5, 10;
 is $v /= 2.5, 4;
