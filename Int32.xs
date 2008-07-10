@@ -356,8 +356,8 @@ SETMAGIC: DISABLE
 # *=
 SELF
 X3DInt32__multiply(self, value, swap=FALSE)
-	SELF	self
-	NV		value
+	SELF		self
+	double	value
 CODE:
 	sv_setiv(self, (I32)(SvIV(self) * value));
 OUTPUT:
@@ -367,8 +367,8 @@ SETMAGIC: DISABLE
 # /=
 SELF
 X3DInt32__divide(self, value, swap=FALSE)
-	SELF	self
-	NV		value
+	SELF		self
+	double	value
 CODE:
 	if (value == 0)
 		croak("Illegal division by zero");
@@ -394,7 +394,7 @@ SETMAGIC: DISABLE
 SELF
 X3DInt32__pow(self, value, swap=FALSE)
 	SELF	self
-	IV		value
+	NV		value
 CODE:
 	sv_setiv(self, (I32)pow(SvIV(self), value));
 OUTPUT:
